@@ -1,0 +1,67 @@
+.content {
+  display:grid;
+  margin: auto;
+  max-width: 90%;
+  justify-content: center;
+}
+
+.inputArea{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.inputRow{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.graphcontent {
+  max-width: 100%;
+}
+
+.lineAmt {
+    fill: none;
+    stroke: #ffab00;
+    stroke-width: 3;
+}
+
+.linePrinc {
+  fill: none;
+  stroke: #2ade0e;
+  stroke-width: 3;
+}
+
+.lineInt {
+  fill: none;
+  stroke: #342f2b;
+  stroke-width: 3;
+}
+  
+.amtDot {
+    fill: #ffab00;
+    stroke: #ffab00;
+}
+
+.intDot {
+  stroke: #342f2b;
+  fill: #342f2b;
+}
+
+.princDot {
+  stroke: #2ade0e;
+  fill: #2ade0e;
+}
+
+.focus circle {
+  fill: none;
+  stroke: steelblue; 
+}
+
+div #tooltip{
+  position: fixed;
+  border: 1px solid black;
+  border-radius: 5px;
+  justify-content: center;
+}
