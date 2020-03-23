@@ -52,24 +52,6 @@ function showGraph() {
   // The number of datapoints
   var n = mortgage.schedule.length;
 
-  // 5. X scale will use the index of our data
-  var xScale = d3.scaleLinear()
-    .domain([0, n - 1]) // input
-    .range([0, width]); // output
-
-  // 6. Y scale will use the randomly generate number 
-  var yScale = d3.scaleLinear()
-    // .domain([0, 1]) // input 
-    .domain([0, inputData.amount]) // input 
-    .range([height, 0]); // output 
-
-  // 7. d3's line generator
-  var line = d3.line()
-    .x(function (d, i) { return xScale(i); }) // set the x values for the line generator
-    .y(function (d) { return yScale(d.y); }) // set the y values for the line generator 
-    .curve(d3.curveMonotoneX) // apply smoothing to the line
-
-  // 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
   var amtData = d3.range(n).map(function (d) { return { "y": mortgage.schedule[d].remainingBalance } })
 
   // running total of interest paid 
@@ -85,6 +67,29 @@ function showGraph() {
     return r;
   }, []);
   var princData = d3.range(n).map(function (d) { return { "y": prData[d] } })
+
+  // 5. X scale will use the index of our data
+  var xScale = d3.scaleLinear()
+  .domain([0, n - 1]) // input
+  .range([0, width]); // output
+
+  var last = intData[intData.length-1].y
+  if ( parseFloat(inputData.amount) > last ){
+    highest = inputData.amount;
+  }else{
+    highest = last;
+  }
+
+  // 6. Y scale will use the randomly generate number 
+  var yScale = d3.scaleLinear()
+      .domain([0, highest])
+      .range([height, 0]);
+
+  // 7. d3's line generator
+  var line = d3.line()
+    .x(function (d, i) { return xScale(i); }) // set the x values for the line generator
+    .y(function (d) { return yScale(d.y); }) // set the y values for the line generator 
+    .curve(d3.curveMonotoneX) // apply smoothing to the line
 
   // 1. Add the SVG to the page and employ #2
   var svg = d3.select("#graph")
@@ -141,7 +146,9 @@ function generateCircles(svg, dataset, dot, xScale, yScale, amtData, intData, pr
     .on('mouseover', function (d, i) {
       // show tooltip 
       var tt = document.getElementById("tooltip");
-      tt.innerHTML = "Amount: " + amtData[i].y.toFixed(2) + "<br> Int: " + intData[i].y.toFixed(2) + "<br> Principal: " + princData[i].y.toFixed(2);
+      tt.innerHTML = "Amount: " + amtData[i].y.toFixed(2) + "<br> Interest: " +
+        intData[i].y.toFixed(2) + "<br> Principal: " +
+        princData[i].y.toFixed(2) + "<br> Month: " + (parseInt(i) + parseInt(1));
       tt.style.opacity = '1';
       d3.select(tt).transition()
         .duration('50')
@@ -199,10 +206,10 @@ function createInputArea() {
   var loanAmt = createInputText("loanAmt", homeVlu.value - downPmt.value);
   var row3 = createInputRow(createLabel("Loan Amount"), loanAmt);
   downPmt.addEventListener('change', function (e) {
-    loanAmt.value = homeVlu.value - downPmt.value 
+    loanAmt.value = homeVlu.value - downPmt.value
   });
   homeVlu.addEventListener('change', function (e) {
-    loanAmt.value = homeVlu.value - downPmt.value 
+    loanAmt.value = homeVlu.value - downPmt.value
   });
   var area = createDivByClass("inputArea");
   area.appendChild(row1);
